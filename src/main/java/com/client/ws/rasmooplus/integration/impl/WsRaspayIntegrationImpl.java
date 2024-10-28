@@ -5,6 +5,7 @@ import com.client.ws.rasmooplus.model.dto.wsraspay.CustomerDto;
 import com.client.ws.rasmooplus.model.dto.wsraspay.OrderDto;
 import com.client.ws.rasmooplus.model.dto.wsraspay.PaymentDto;
 import org.apache.tomcat.util.codec.binary.Base64;
+import org.hibernate.query.Order;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -17,14 +18,15 @@ import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 public class WsRaspayIntegrationImpl implements WsRaspayIntegration {
 
     private final RestTemplate restTemplate;
+    private final HttpHeaders headers;
     public WsRaspayIntegrationImpl() {
         restTemplate = new RestTemplate();
+        headers = getHeaders();
     }
     @Override
     public CustomerDto createCustomer(CustomerDto dto) {
         try {
-            HttpHeaders headers = getHeaders();
-            HttpEntity<CustomerDto> request = new HttpEntity<>(dto, headers);
+            HttpEntity<CustomerDto> request = new HttpEntity<>(dto, this.headers);
             ResponseEntity<CustomerDto> response =
                     restTemplate.exchange("https://raspay-api-61f5fa5fc34c.herokuapp.com/ws-raspay/v1/customer",
                             HttpMethod.POST, request, CustomerDto.class);
@@ -36,7 +38,16 @@ public class WsRaspayIntegrationImpl implements WsRaspayIntegration {
     }
     @Override
     public OrderDto createOrder(OrderDto dto) {
-        return null;
+        try {
+            HttpEntity<OrderDto> request = new HttpEntity<>(dto, this.headers);
+            ResponseEntity<OrderDto> response =
+                    restTemplate.exchange("https://raspay-api-61f5fa5fc34c.herokuapp.com/ws-raspay/v1/order",
+                            HttpMethod.POST, request, OrderDto.class);
+
+            return response.getBody();
+        } catch (Exception e) {
+            throw e;
+        }
     }
 
     @Override
