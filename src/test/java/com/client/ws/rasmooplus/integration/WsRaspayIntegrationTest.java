@@ -32,7 +32,7 @@ class WsRaspayIntegrationTest {
     void processPaymentWhenDtoOK() {
         CreditCardDto creditCardDto = new CreditCardDto(123L, "17215851095",0L,
                 06L, "1234123412341234", 2025L);
-        PaymentDto paymentDto = new PaymentDto(creditCardDto, "671f9f7da44b4f1f8ce27ece", "67210ec842ac265e8024f4a8");
+        PaymentDto paymentDto = new PaymentDto(creditCardDto, "671f9f7da44b4f1f8ce27ece", "672119da42ac265e8024f4a9");
         wsRaspayIntegration.processPayment(paymentDto);
     }
 
