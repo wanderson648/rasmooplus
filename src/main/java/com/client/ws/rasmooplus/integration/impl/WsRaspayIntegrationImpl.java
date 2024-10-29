@@ -52,7 +52,16 @@ public class WsRaspayIntegrationImpl implements WsRaspayIntegration {
 
     @Override
     public Boolean processPayment(PaymentDto dto) {
-        return null;
+        try {
+            HttpEntity<PaymentDto> request = new HttpEntity<>(dto, this.headers);
+            ResponseEntity<Boolean> response =
+                    restTemplate.exchange("https://raspay-api-61f5fa5fc34c.herokuapp.com/ws-raspay/v1/payment/credit-card/",
+                            HttpMethod.POST, request, Boolean.class);
+
+            return response.getBody();
+        } catch (Exception e) {
+            throw e;
+        }
     }
 
     private static HttpHeaders getHeaders() {
