@@ -2,6 +2,7 @@ package com.client.ws.rasmooplus.service.impl;
 
 import com.client.ws.rasmooplus.exception.BusinessException;
 import com.client.ws.rasmooplus.exception.NotFoundException;
+import com.client.ws.rasmooplus.integration.MailIntegration;
 import com.client.ws.rasmooplus.integration.WsRaspayIntegration;
 import com.client.ws.rasmooplus.mapper.UserPaymentInfoMapper;
 import com.client.ws.rasmooplus.mapper.wsrapsy.CreditCardMapper;
@@ -29,6 +30,7 @@ public class PaymentInfoServiceImpl implements PaymentInfoService {
     private final UserRepository userRepository;
     private final UserPaymentInfoRepository userPaymentInfoRepository;
     private final WsRaspayIntegration wsRaspayIntegration;
+    private final MailIntegration mailIntegration;
     @Override
     public Boolean process(PaymentProcessDto dto) {
         var userOpt = userRepository.findById(dto.getUserPaymentInfoDto().getUserId());
@@ -49,10 +51,13 @@ public class PaymentInfoServiceImpl implements PaymentInfoService {
 
         Boolean successPayment = wsRaspayIntegration.processPayment(paymentDto);
 
-        if(successPayment) {
+        if(Boolean.TRUE.equals(successPayment)) {
             UserPaymentInfo userPaymentInfo = UserPaymentInfoMapper.fromDtoToEntity(dto.getUserPaymentInfoDto(), user);
             userPaymentInfoRepository.save(userPaymentInfo);
+            mailIntegration.send(user.getEmail(), "Usuario: +" +user.getEmail()
+                    +"- Senha: alunorasmoo", "Acesso Liberado");
+            return true;
         }
-        return null;
+        return false;
     }
 }
