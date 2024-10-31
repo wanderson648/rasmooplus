@@ -17,7 +17,7 @@ import java.time.LocalDate;
 public class UserPaymentInfo implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_payment_info_id")
     private Long id;
 
@@ -32,6 +32,9 @@ public class UserPaymentInfo implements Serializable {
 
     @Column(name = "card_security_code")
     private String cardSecurityCode;
+
+    @Column(name = "installments")
+    private Long installments;
 
     private BigDecimal price;
     private BigDecimal instalments;

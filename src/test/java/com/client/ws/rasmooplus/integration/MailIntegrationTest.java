@@ -12,7 +12,6 @@ import java.math.BigDecimal;
 
 @SpringBootTest
 class MailIntegrationTest {
-
     @Autowired
     private MailIntegration mailIntegration;
     @Test
